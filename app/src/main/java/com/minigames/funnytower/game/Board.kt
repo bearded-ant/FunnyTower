@@ -6,8 +6,8 @@ class Board(private val width: Int) {
     }
 
     private var numberOfSpaces: Int = 0
-    private var numberOfBlanks: Int = 0
-    private var numberOfOccupied: Int = 0
+    var numberOfBlanks: Int = 0
+    var numberOfOccupied: Int = 0
     private val blankSpaces: MutableList<Pair<Int, Int>>
     private val board: Array<Array<Char?>>
 
@@ -19,18 +19,22 @@ class Board(private val width: Int) {
         board = Array(width) { Array(width) { BLANK } }
     }
 
-    fun isBlank(): Boolean {
+    fun isAllBlank(): Boolean {
         return numberOfBlanks == numberOfSpaces
+    }
+
+    fun isBlank(space: Int): Boolean {
+        val pair = spaceToPair(space)
+        return board[pair.first][pair.second] == BLANK
     }
 
     fun placePiece(piece: Char, space: Int): Board {
         if (piece != BLANK) {
-            val row = space / width
-            val col = space % width
-            board[row][col] = piece
+            val pair = spaceToPair(space)
+            board[pair.first][pair.second] = piece
             numberOfBlanks--
             numberOfOccupied++
-            blankSpaces.remove(Pair(row, col))
+            blankSpaces.remove(pair)
         }
         return this
     }
@@ -45,5 +49,11 @@ class Board(private val width: Int) {
 
     private fun squareArray(array: List<Int>): List<Pair<Int, Int>> {
         return array.flatMap { i -> array.map { j -> Pair(i, j) } }
+    }
+
+    private fun spaceToPair(space: Int): Pair<Int, Int> {
+        val row = space / width
+        val col = space % width
+        return Pair(row, col)
     }
 }

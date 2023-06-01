@@ -1,13 +1,16 @@
 package com.minigames.funnytower
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.minigames.funnytower.databinding.ActivityMainBinding
+import com.minigames.funnytower.game.Board
 import korlibs.korge.android.KorgeAndroidView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var korgeAndroidView: KorgeAndroidView
+    private var board = Board(3)
     private lateinit var binding: ActivityMainBinding
+    private var choice = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +23,16 @@ class MainActivity : AppCompatActivity() {
         binding.toolContainer.addView(korgeAndroidView)
 
         binding.loadViewButton.setOnClickListener {
-            binding.loadViewButton.isEnabled = false
-            binding.unloadViewButton.isEnabled = true
+            if (binding.choice.text.toString().isNotBlank()) {
+                choice = binding.choice.text.toString().toInt()
+                board = board.placePiece('x', choice)
+            }
+            binding.arrayView.text = board.toArray().toString()
+
+//            Toast.makeText(this, "${board.toArray()}", Toast.LENGTH_LONG).show()
+
+//            binding.loadViewButton.isEnabled = false
+//            binding.unloadViewButton.isEnabled = true
 //            loadToolModule()
         }
 
